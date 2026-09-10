@@ -19,3 +19,16 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+--------------------------------------------------------------------------------
+
+Attribution
+-----------
+
+This repository is a fork of "career-ops" by Santiago Fernández de Valderrama
+(https://github.com/santifer/career-ops). The original work is used and modified
+under the MIT License, and the copyright and permission notice above are retained
+in full from the upstream project.
+
+New contributions in this fork — including the dashboard-cf/ dashboard
+(Cloudflare Pages + Functions + D1) — are released under the same MIT License.
