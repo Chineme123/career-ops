@@ -1,0 +1,20 @@
+# wrangler.toml — Cloudflare Pages project config for the career-ops dashboard.
+#
+# Pages-specific: `pages_build_output_dir` points at the static assets directory.
+# The Pages Functions in ./functions are picked up automatically (file-based routing).
+# This file's `[[d1_databases]]` binding wires the D1 database to `context.env.DB`
+# in every function, AND is read by `wrangler pages dev` for local development.
+
+name = "career-ops-dashboard"
+pages_build_output_dir = "public"
+compatibility_date = "2026-09-01"
+
+# --- D1 database binding ---------------------------------------------------
+# After you run `npx wrangler d1 create career-ops-dashboard`, wrangler prints a
+# database_id (a UUID). Paste it below, replacing the placeholder. The binding
+# name "DB" is what the functions reference as context.env.DB — do not rename it
+# without also updating functions/api/*.js.
+[[d1_databases]]
+binding = "DB"
+database_name = "career-ops-dashboard"
+database_id = "REPLACE_AFTER_wrangler_d1_create"   # <- paste your D1 UUID from: npx wrangler d1 create career-ops-dashboard

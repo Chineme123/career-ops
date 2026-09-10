@@ -1,0 +1,20 @@
+{
+  "name": "career-ops-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Cloudflare Pages + Pages Functions + D1 job-search dashboard for career-ops",
+  "scripts": {
+    "sync": "node sync-applications-to-d1.mjs",
+    "dev": "wrangler pages dev public",
+    "deploy": "wrangler pages deploy public",
+    "db:create": "wrangler d1 create career-ops-dashboard",
+    "schema:remote": "wrangler d1 execute career-ops-dashboard --remote --file=schema.sql",
+    "schema:local": "wrangler d1 execute career-ops-dashboard --local --file=schema.sql",
+    "import:remote": "wrangler d1 execute career-ops-dashboard --remote --file=import.sql",
+    "import:local": "wrangler d1 execute career-ops-dashboard --local --file=import.sql"
+  },
+  "devDependencies": {
+    "wrangler": "^3"
+  }
+}

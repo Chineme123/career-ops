@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>career-ops dashboard</title>
+
+  <!-- Hanken Grotesk (chineme.dev) with graceful system fallback -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header class="masthead">
+      <p class="masthead__eyebrow">career-ops</p>
+      <h1 class="masthead__title">Job Search Dashboard</h1>
+      <p class="masthead__sub">Evaluated offers, application status, and notes — one row per opportunity.</p>
+    </header>
+
+    <!-- total + per-status counts (also act as filters) -->
+    <nav class="counts" id="counts" aria-label="Filter by status"></nav>
+
+    <div class="toolbar">
+      <div class="search">
+        <svg class="search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <input type="text" id="search" placeholder="Search company, role, or notes…"
+               autocomplete="off" spellcheck="false" aria-label="Search jobs" />
+      </div>
+      <button class="btn btn--primary" id="add-btn" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+          <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+        Add job
+      </button>
+      <button class="btn btn--ghost" id="export-btn" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
+        </svg>
+        Export
+      </button>
+    </div>
+
+    <!-- states -->
+    <div class="state" id="loading-state">
+      <p class="state__title">Loading…</p>
+      <p class="state__sub">Fetching your pipeline.</p>
+    </div>
+
+    <div class="state" id="empty-state" hidden>
+      <p class="state__title">No jobs yet</p>
+      <p class="state__sub">Evaluations will appear here as they sync in.</p>
+    </div>
+
+    <div class="state" id="no-results-state" hidden>
+      <p class="state__title">No matches</p>
+      <p class="state__sub">Nothing fits the current search or filter.</p>
+    </div>
+
+    <div class="state state--error" id="error-state" hidden>
+      <p class="state__title">Couldn’t load jobs</p>
+      <p class="state__sub" id="error-detail">The API request failed.</p>
+    </div>
+
+    <!-- accordion list -->
+    <div class="list" id="list" role="list"></div>
+
+    <footer class="foot">
+      <span>career-ops · Cloudflare Pages + D1</span>
+      <span>Gated privately with Cloudflare Access · statuses per <code>templates/states.yml</code></span>
+    </footer>
+  </div>
+
+  <!-- Add-job modal -->
+  <div class="modal-backdrop" id="add-modal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="add-title">
+      <div class="modal__head">
+        <h2 class="modal__title" id="add-title">Add a job</h2>
+        <button class="modal__close" id="add-close" type="button" aria-label="Close">&times;</button>
+      </div>
+      <form id="add-form">
+        <div class="modal__body">
+          <div class="modal__grid">
+            <div class="form-control full">
+              <label for="f-company">Company</label>
+              <input type="text" id="f-company" name="company" required autocomplete="off" />
+            </div>
+            <div class="form-control full">
+              <label for="f-role">Role</label>
+              <input type="text" id="f-role" name="role" autocomplete="off" />
+            </div>
+            <div class="form-control">
+              <label for="f-date">Date</label>
+              <input type="date" id="f-date" name="date" />
+            </div>
+            <div class="form-control">
+              <label for="f-score">Score (0–5)</label>
+              <input type="number" id="f-score" name="score" min="0" max="5" step="0.1" inputmode="decimal" />
+            </div>
+            <div class="form-control">
+              <label for="f-status">Status</label>
+              <select id="f-status" name="status"></select>
+            </div>
+            <div class="form-control">
+              <label for="f-location">Location</label>
+              <input type="text" id="f-location" name="location" autocomplete="off" />
+            </div>
+            <div class="form-control full">
+              <label for="f-url">URL</label>
+              <input type="url" id="f-url" name="url" placeholder="https://…" autocomplete="off" />
+            </div>
+            <div class="form-control full">
+              <label for="f-notes">Notes</label>
+              <textarea id="f-notes" name="notes" rows="2"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal__foot">
+          <button type="button" class="btn btn--ghost" id="add-cancel">Cancel</button>
+          <button type="submit" class="btn btn--primary">Add job</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

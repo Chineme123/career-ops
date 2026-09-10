@@ -4,7 +4,7 @@
  * generate-pdf.mjs — HTML → PDF via Playwright
  *
  * Usage:
- *   node career-ops/generate-pdf.mjs <input.html> <output.pdf> [--format=letter|a4]
+ *   node career-ops/generate-pdf.mjs <input.html> <output.pdf> [--format=letter|a4] [--margin=0.4in]
  *
  * Requires: @playwright/test (or playwright) installed.
  * Uses Chromium headless to render the HTML and produce a clean, ATS-parseable PDF.
@@ -78,11 +78,13 @@ async function generatePDF() {
   const args = process.argv.slice(2);
 
   // Parse arguments
-  let inputPath, outputPath, format = 'a4';
+  let inputPath, outputPath, format = 'a4', margin = '0.6in';
 
   for (const arg of args) {
     if (arg.startsWith('--format=')) {
       format = arg.split('=')[1].toLowerCase();
+    } else if (arg.startsWith('--margin=')) {
+      margin = arg.split('=')[1];
     } else if (!inputPath) {
       inputPath = arg;
     } else if (!outputPath) {
@@ -91,7 +93,7 @@ async function generatePDF() {
   }
 
   if (!inputPath || !outputPath) {
-    console.error('Usage: node generate-pdf.mjs <input.html> <output.pdf> [--format=letter|a4]');
+    console.error('Usage: node generate-pdf.mjs <input.html> <output.pdf> [--format=letter|a4] [--margin=0.4in]');
     process.exit(1);
   }
 
@@ -107,7 +109,7 @@ async function generatePDF() {
 
   console.log(`📄 Input:  ${inputPath}`);
   console.log(`📁 Output: ${outputPath}`);
-  console.log(`📏 Format: ${format.toUpperCase()}`);
+  console.log(`📏 Format: ${format.toUpperCase()} | Margin: ${margin}`);
 
   // Read HTML to inject font paths as absolute file:// URLs
   let html = await readFile(inputPath, 'utf-8');
@@ -151,10 +153,10 @@ async function generatePDF() {
       format: format,
       printBackground: true,
       margin: {
-        top: '0.6in',
-        right: '0.6in',
-        bottom: '0.6in',
-        left: '0.6in',
+        top: margin,
+        right: margin,
+        bottom: margin,
+        left: margin,
       },
       preferCSSPageSize: false,
     });
