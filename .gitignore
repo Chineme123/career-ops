@@ -48,3 +48,19 @@ bun.lock
 .claude/memory/
 career-dashboard
 package-lock.json
+
+# --- Public-fork hardening: personal/local files that must NEVER reach the public repo ---
+# Working data + snapshots
+archive/
+article-digest.md
+data/follow-ups.md
+data/user-comments.tsv
+
+# Older local HTML dashboard (superseded by dashboard-cf/; embeds name + local paths + data)
+dashboard.html
+generate-dashboard.mjs
+dashboard-server.mjs
+
+# Cover-letter mode/template are personalized with private examples — sanitize before ever committing
+modes/cover-letter.md
+templates/cover-letter-template.html
